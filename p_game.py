@@ -11,15 +11,20 @@ class Character:
     def buff_hp(self, buff):
         self.health = self.health + buff
     
-    def show_stats(self):
-        print("attack>" + str(self.attack) + " HP>" + str(self.health))
+    def show_stats(self, arg):
+        if arg == 1:
+            return 1#"Útok: " + str(self.attack) + " HP: " + str(self.health))
+        elif arg == 2:
+            return self.health
+        elif arg == 3:
+            return self.attack
+        else:
+            print("Invalid argument in show_stats()")
     
 #class Hero inherits Character 
 class Hero(Character):
     type = c.PLAYER
     
-    
-
 #class Monster inherits Monster 
 class Monster(Character):
     type = c.MONSTER      
@@ -45,7 +50,7 @@ class Coms:
 def check_if_dead(character ):
     notification = Coms()
     
-    if character.health == 0:
+    if character.health <= 0:
         if character.type == c.MONSTER:
             notification.monster_dead(character.name)
         elif character.type == c.PLAYER:
@@ -58,9 +63,13 @@ def check_if_dead(character ):
 
 
 
-def encounter(monster, player, i):
+def fight(monster, player, i):
     notification = Coms()
     notification.round(i)
+    
+    print(monster.name + " má " + str(monster.show_stats(2)) + " HP")
+    print(player.name + " má " + str(player.show_stats(2)) + " HP")
+    
     monster.health = monster.health - player.attack
     player.health = player.health - monster.attack
     
@@ -68,13 +77,17 @@ def encounter(monster, player, i):
         #print("monster live")
         if not check_if_dead(player):
             #print("player live")
-            encounter(monster, player, i + 1)
+            fight(monster, player, i + 1)
+            
+def encounter(monster, player):
+    print("Narazil jsi na " + monster.name + "! Útok: " + str(monster.attack) + " HP: " + str(monster.health))
+    fight(monster, player, 1)
 
 chat = Coms()
 chat.start_game()
 player1 = Hero(chat.i_name, 5, 1)
 monster1 = Monster("Vlk", 6, 1)
-encounter(monster1, player1, 1)
+encounter(monster1, player1)
 
 
 
